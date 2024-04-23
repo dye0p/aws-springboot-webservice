@@ -1,6 +1,5 @@
 package com.springbootproject.springbootwebservice.web;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class) //Junit5
+@ExtendWith(SpringExtension.class) //Junit5 테스트 어노테이션
 @WebMvcTest(controllers = HelloController.class) //MVC 컨트롤러 테스트
 class HelloControllerTest {
 
@@ -20,13 +19,11 @@ class HelloControllerTest {
     private MockMvc mvc; //HTTP, GET, POST API 테스트 가능
 
     @Test
-    @DisplayName("")
     void hello가_리턴된다() throws Exception {
         String hello = "hello";
 
         mvc.perform(get("/hello")) // '/hello' 주소로 HTTP GET 요청
-                .andExpect(status().isOk())
-                .andExpect(content().string(hello));
+                .andExpect(status().isOk()) //HTTP 응답이 200인지 확인
+                .andExpect(content().string(hello)); //응답의 본문이 "hello"인지 확인
     }
-
 }
