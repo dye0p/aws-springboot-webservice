@@ -30,6 +30,12 @@ public class Posts { //실제 DB와 매칭될 Entity 클래스
         this.title = title;
     }
 
-    /*Entity 클ㄹ스에는 절대 Setter 메소드를 만들지 않는다.
+    /*Entity 클래스에는 절대 Setter 메소드를 만들지 않는다.
     * 해당 필드의 값 변경이 필요하면 명확히 그 목적과 의도를 나타낼 수 있는 메소드를 추가해야만 한다*/
+
+    /*비즈니스 로직은 도메인에 작성되어야 한다.*/
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
