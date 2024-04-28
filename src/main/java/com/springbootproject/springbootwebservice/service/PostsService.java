@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostsService {
     private final PostsRepository postsRepository;
 
-    //회원가입을 하고 회원 PK를 리턴
+    //등록
     @Transactional
     public Long save(PostsSaveRequestDto postsSaveRequestDto) {
         return postsRepository.save(postsSaveRequestDto.toEntity()).getId();
