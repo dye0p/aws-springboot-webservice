@@ -1,5 +1,6 @@
 package com.springbootproject.springbootwebservice.domain.posts;
 
+import com.springbootproject.springbootwebservice.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor //기본 생성자 자동 추가 public Posts() {}와 같은 효과
 @Entity
-public class Posts { //실제 DB와 매칭될 Entity 클래스
+public class Posts extends BaseTimeEntity { //실제 DB와 매칭될 Entity 클래스
 
     @Id //해당 테이블의 PK 필드
     @GeneratedValue(strategy = GenerationType.IDENTITY) //PK_auto_increment
@@ -24,10 +25,10 @@ public class Posts { //실제 DB와 매칭될 Entity 클래스
     private String author;
 
     @Builder //해당 클래스의 빌더 패턴 클래스 생성, 생성자 상단에 선언시 생성자의 포함된 필드만 빌더에 포함
-    public Posts(String content, String author, String title) {
+    public Posts(String title,String content, String author) {
+        this.title = title;
         this.content = content;
         this.author = author;
-        this.title = title;
     }
 
     /*Entity 클래스에는 절대 Setter 메소드를 만들지 않는다.
