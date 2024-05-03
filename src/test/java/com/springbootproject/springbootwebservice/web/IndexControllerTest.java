@@ -12,13 +12,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class IndexControllerTest {
+class IndexControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
-    public void 메인페이지_로딩() {
+    void 메인페이지_로딩() {
         //when
         String body = this.restTemplate.getForObject("/", String.class);
         //then
