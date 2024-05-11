@@ -29,35 +29,34 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
-        //로그인 진행 중인 서비스를 구분 (구글, 네이버, 카카오,...)
+        //로그인 진행 중인 서비스 구분 (구글, 네이버, 카카오,...)
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-
-        //OAuth2 로그인 진행 시 키가 되는 필드값, PK와 같은 의미, 네이버 로그인과 구글 로그인을 동시에 지원할 때 사용
-        String userNameAttributeName = userRequest
-                .getClientRegistration().getProviderDetails()
+        String userNameAttributeName = userRequest.
+                getClientRegistration().getProviderDetails()
                 .getUserInfoEndpoint().getUserNameAttributeName();
 
+        // OAuth2User 의 attribute 등을 담을 클래스
         OAuthAttributes attributes = OAuthAttributes.
                 of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        //사용자 저장, 세션에 사용자 정보 저장
-        UserInfo userInfo = saveOrUpdate(attributes);
-        httpSession.setAttribute("user", new SessionUser(userInfo));
+        // 사용자 저장, 세션에 사용자 정보 저장
+        UserInfo user = saveOrUpdate(attributes);
+        httpSession.setAttribute("user", new SessionUser(user));
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(userInfo.getRoleKey())),
+                Collections.singleton(
+                        new SimpleGrantedAuthority(user.getRoleKey())),
                 attributes.getAttributes(),
-                attributes.getNameAttributesKey());
+                attributes.getNameAttributeKey());
     }
 
     private UserInfo saveOrUpdate(OAuthAttributes attributes) {
-        UserInfo userInfo = userRepository.findByEmail(attributes.getEmail())
-                // 사용자가 존재하면 -> 정보 업데이트
+        UserInfo user = userRepository.findByEmail(attributes.getEmail())
+                // 가입 O -> 정보 업데이트
                 .map(entity -> entity.update(attributes.getName(), attributes.getPicture()))
-                // 사용자가 존재하지 않으면-> 새로운 사용자 생성
+                // 가입 X -> User 엔티티 생성
                 .orElse(attributes.toEntity());
 
-        //사용자 정보 저장 후 엔티티 반환
-        return userRepository.save(userInfo);
+        return userRepository.save(user);
     }
 }

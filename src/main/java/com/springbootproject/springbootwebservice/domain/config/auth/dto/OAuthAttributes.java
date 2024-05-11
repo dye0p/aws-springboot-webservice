@@ -11,7 +11,7 @@ import java.util.Map;
 public class OAuthAttributes { //OAuth2UserService를 통해 가져온 OAuth2User의 attribute 등을 담을 클래스
 
     private Map<String, Object> attributes;
-    private String nameAttributesKey;
+    private String nameAttributeKey;
     private String name;
     private String email;
     private String picture;
@@ -19,7 +19,7 @@ public class OAuthAttributes { //OAuth2UserService를 통해 가져온 OAuth2Use
     @Builder
     public OAuthAttributes(Map<String, Object> attributes, String email, String name, String nameAttributeKey, String picture) {
         this.attributes = attributes;
-        this.nameAttributesKey = nameAttributeKey;
+        this.nameAttributeKey = nameAttributeKey;
         this.email = email;
         this.name = name;
         this.picture = picture;
