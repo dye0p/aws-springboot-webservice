@@ -28,6 +28,9 @@ public class OAuthAttributes { //OAuth2UserService를 통해 가져온 OAuth2Use
     public static OAuthAttributes of(String registrationId,
                                      String userNameAttributeName,
                                      Map<String, Object> attributes) {
+        if ("naver".equals(registrationId)) {
+            return ofNaver("id", attributes);
+        }
         return ofGoogle(userNameAttributeName, attributes);
     }
 
@@ -41,12 +44,27 @@ public class OAuthAttributes { //OAuth2UserService를 통해 가져온 OAuth2Use
                 .build();
     }
 
+
+    private static OAuthAttributes ofNaver(String usernameAttributeName,
+                                           Map<String, Object> attributes) {
+        Map<String, Object> response = (Map<String, Object>)
+                attributes.get("response");
+
+        return OAuthAttributes.builder()
+                .name((String) response.get("name"))
+                .email((String) response.get("email"))
+                .picture((String) response.get("profile_image"))
+                .attributes(response)
+                .nameAttributeKey(usernameAttributeName)
+                .build();
+    }
+
     public UserInfo toEntity() { //처음 가입시 사용되는 메서드
         return UserInfo.builder()
                 .name(name)
                 .email(email)
                 .picture(picture)
-                .role(Role.GUSET) //가입시 기본 권한 부여
+                .role(Role.USER) //가입시 기본 권한 부여
                 .build();
     }
 }
