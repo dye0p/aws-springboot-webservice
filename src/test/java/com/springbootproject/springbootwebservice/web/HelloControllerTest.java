@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -12,12 +15,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class) //Junit5 테스트 어노테이션
-@WebMvcTest(controllers = HelloController.class) //MVC 컨트롤러 테스트
+@WebMvcTest(controllers = HelloController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityException.class)
+        }) //MVC 컨트롤러 테스트
 class HelloControllerTest {
 
     @Autowired
     private MockMvc mvc; //HTTP, GET, POST API 테스트 가능
 
+    @WithMockUser(roles = "USER")
     @Test
     void hello가_리턴된다() throws Exception {
         String hello = "hello";
@@ -27,6 +34,7 @@ class HelloControllerTest {
                 .andExpect(content().string(hello)); //응답의 본문이 "hello"인지 확인
     }
 
+    @WithMockUser(roles = "USER")
     @Test
     void helloDto가_리턴된다() throws Exception {
         String name = "hello";
